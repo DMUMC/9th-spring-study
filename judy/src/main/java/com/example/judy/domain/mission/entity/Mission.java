@@ -26,7 +26,7 @@ public class Mission extends BaseEntity
 
     @Column(name = "point", nullable = false)
     @Builder.Default
-    private Integer point = 0;
+    private Integer point;
 
     @Column(name = "deadline", nullable = false)
     private LocalDate deadline;
