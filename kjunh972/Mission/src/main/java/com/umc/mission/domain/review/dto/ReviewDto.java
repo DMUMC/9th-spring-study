@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ReviewDto {
 
@@ -48,6 +50,36 @@ public class ReviewDto {
                     .content(review.getContent())
                     .status(review.getStatus().name())
                     .createdAt(review.getCreatedAt())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PageResponse {
+        private List<Response> reviews;
+        private long totalElements;
+        private int numberOfElements;
+        private int totalPages;
+        private int currentPage;
+        private int pageSize;
+        private boolean isFirst;
+        private boolean isLast;
+
+        public static PageResponse from(Page<Review> page) {
+            return PageResponse.builder()
+                    .reviews(page.getContent().stream()
+                            .map(Response::from)
+                            .toList())
+                    .totalElements(page.getTotalElements())
+                    .numberOfElements(page.getNumberOfElements())
+                    .totalPages(page.getTotalPages())
+                    .currentPage(page.getNumber())
+                    .pageSize(page.getSize())
+                    .isFirst(page.isFirst())
+                    .isLast(page.isLast())
                     .build();
         }
     }

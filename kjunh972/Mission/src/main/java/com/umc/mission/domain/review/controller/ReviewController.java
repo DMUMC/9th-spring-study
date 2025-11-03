@@ -1,11 +1,14 @@
 package com.umc.mission.domain.review.controller;
 
 import com.umc.mission.domain.review.dto.ReviewDto;
+import com.umc.mission.domain.review.entity.Review;
 import com.umc.mission.domain.review.service.ReviewService;
 import com.umc.mission.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -48,5 +51,20 @@ public class ReviewController {
     @GetMapping("/member/{memberId}/count")
     public ApiResponse<Long> getReviewCount(@PathVariable Long memberId) {
         return ApiResponse.ok(reviewService.getReviewCount(memberId));
+    }
+
+    /**
+     * 내가 작성한 리뷰 필터링 조회 (가게별, 별점별)
+     */
+    @GetMapping("/member/{memberId}/filter")
+    public ApiResponse<ReviewDto.PageResponse> getMyReviewsByFilters(
+            @PathVariable Long memberId,
+            @RequestParam(required = false) Long storeId,
+            @RequestParam(required = false) BigDecimal minRating,
+            @RequestParam(required = false) BigDecimal maxRating,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Review> reviewPage = reviewService.getMyReviewsByFilters(memberId, storeId, minRating, maxRating, page, size);
+        return ApiResponse.ok(ReviewDto.PageResponse.from(reviewPage));
     }
 }

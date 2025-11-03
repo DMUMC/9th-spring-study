@@ -83,4 +83,12 @@ public class ReviewService {
     public Long getReviewCount(Long memberId) {
         return reviewRepository.countByMemberId(memberId);
     }
+
+    // QueryDSL을 사용한 회원의 리뷰 필터링 조회 (가게별, 별점별)
+    @Transactional(readOnly = true)
+    public Page<Review> getMyReviewsByFilters(Long memberId, Long storeId,
+                                              BigDecimal minRating, BigDecimal maxRating,
+                                              int page, int size) {
+        return reviewRepository.findMyReviewsByFilters(memberId, storeId, minRating, maxRating, PageRequest.of(page, size));
+    }
 }
