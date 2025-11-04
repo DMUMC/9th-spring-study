@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface StoreRepository extends JpaRepository<Store, Long> {
+public interface StoreRepository extends JpaRepository<Store, Long>, StoreRepositoryCustom {
 
     // 특정 지역의 가게 조회 (페이징) - 메서드 이름 기반 쿼리
     Page<Store> findByRegionId(Long regionId, Pageable pageable);
@@ -25,7 +25,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     // 특정 지역의 가게 목록 조회 (리스트)
     List<Store> findByRegionId(Long regionId);
 
-    // 평점 높은 순으로 가게 조회 - @Query 어노테이션 사용
+    // 평점 높은 순으로 가게 조회
     @Query("SELECT s FROM Store s WHERE s.region.id = :regionId ORDER BY s.rating DESC, s.reviewCount DESC")
     Page<Store> findTopRatedByRegion(@Param("regionId") Long regionId, Pageable pageable);
 }
