@@ -1,0 +1,31 @@
+### IntelliJ ###
+.idea
+*.iml
+*.iws
+*.ipr
+/out/
+/classes/
+
+# Local configuration
+*.properties
+*.xml
+
+### Gradle ###
+/build/
+.gradle/
+!/build/generated-src/
+
+# QueryDSL, Spring Boot
+/target/
+
+# Log files
+*.log
+
+# Temp files
+*.tmp
+
+# Dependency storage
+/libs/
+/repo/
+
+.env
