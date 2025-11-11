@@ -1,7 +1,10 @@
 package com.umc.mission.global.exception;
 
+import com.umc.mission.global.notification.DiscordNotificationService;
 import com.umc.mission.global.response.ApiResponse;
 import com.umc.mission.global.code.CommonResponseCode;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,7 +21,10 @@ import org.springframework.validation.FieldError;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final DiscordNotificationService discordNotificationService;
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
@@ -93,16 +99,24 @@ public class GlobalExceptionHandler {
     }
     
     @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<Object> handleRuntimeException(RuntimeException e) {
-        log.warn("Runtime exception occurred: {}", e.getMessage());
-        return ApiResponse.error(CommonResponseCode.BAD_REQUEST_ERROR, e.getMessage());
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiResponse<Object> handleRuntimeException(RuntimeException e, HttpServletRequest request) {
+        log.error("Runtime exception occurred: ", e);
+
+        // 500 에러 발생 시 디스코드 알림 전송
+        discordNotificationService.sendErrorNotification(e, request);
+
+        return ApiResponse.error(CommonResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
     }
-    
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiResponse<Object> handleException(Exception e) {
+    public ApiResponse<Object> handleException(Exception e, HttpServletRequest request) {
         log.error("Exception occurred: ", e);
+
+        // 500 에러 발생 시 디스코드 알림 전송
+        discordNotificationService.sendErrorNotification(e, request);
+
         return ApiResponse.error(CommonResponseCode.INTERNAL_SERVER_ERROR);
     }
 }

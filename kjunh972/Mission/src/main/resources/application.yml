@@ -2,6 +2,9 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
@@ -15,3 +18,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+
+# Notification Configuration
+notification:
+  discord:
+    webhook-url: ${DISCORD_WEBHOOK_URL}
+    enabled: ${NOTIFICATION_ENABLED:true}
+  environments:
+    alert-enabled:
+      - dev
+      - prod
