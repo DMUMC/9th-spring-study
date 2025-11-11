@@ -1,6 +1,7 @@
 package com.example.dobee.global.response;
 
 import com.example.dobee.global.code.ResponseCode;
+import com.example.dobee.global.code.SuccessCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,32 +15,28 @@ public class ApiResponse<T> {
     private ResponseStatus status;
     private T body;
 
-    public static <T> ApiResponse<T> ok() {
-        return ApiResponse.ok(null);
+    public static <T> ApiResponse<T> onSuccess(SuccessCode successCode) {
+        var apiResponse = new ApiResponse<T>();
+        apiResponse.status = ResponseStatus.onSuccess(successCode);
+        return apiResponse;
     }
 
-    public static <T> ApiResponse<T> ok(T body) {
+    public static <T> ApiResponse<T> onSuccess(SuccessCode successCode,T body) {
         var apiResponse = new ApiResponse<T>();
-        apiResponse.status = ResponseStatus.ok();
+        apiResponse.status = ResponseStatus.onSuccess(successCode);
         apiResponse.body = body;
         return apiResponse;
     }
 
-    public static <T> ApiResponse<T> error() {
+    public static <T> ApiResponse<T> onFailure(ResponseCode responseCode) {
         var apiResponse = new ApiResponse<T>();
-        apiResponse.status = ResponseStatus.error();
+        apiResponse.status = ResponseStatus.onFailure(responseCode);
         return apiResponse;
     }
 
-    public static <T> ApiResponse<T> error(ResponseCode responseCode) {
+    public static <T> ApiResponse<T> onFailure(ResponseCode responseCode, String description) {
         var apiResponse = new ApiResponse<T>();
-        apiResponse.status = ResponseStatus.error(responseCode);
-        return apiResponse;
-    }
-
-    public static <T> ApiResponse<T> error(ResponseCode responseCode, String description) {
-        var apiResponse = new ApiResponse<T>();
-        apiResponse.status = ResponseStatus.error(responseCode, description);
+        apiResponse.status = ResponseStatus.onFailure(responseCode, description);
         return apiResponse;
     }
 }

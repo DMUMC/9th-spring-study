@@ -4,6 +4,7 @@ import com.example.dobee.domain.member.dto.MemberDto;
 import com.example.dobee.domain.member.entity.Member;
 import com.example.dobee.domain.member.service.MemberService;
 import com.example.dobee.domain.mission.dto.MemberMissionDto;
+import com.example.dobee.global.code.SuccessCode;
 import com.example.dobee.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,7 @@ public class MemberController {
 
     @GetMapping("/{memberId}")
     public ApiResponse<Member> getMemberInfo(@PathVariable Long memberId) {
-        return ApiResponse.ok(memberService.getMemberInfo(memberId));
+        return ApiResponse.onSuccess(SuccessCode.OK, memberService.getMemberInfo(memberId));
     }
 
     @GetMapping("/{memberId}/missions/ongoing")
@@ -26,7 +27,7 @@ public class MemberController {
             @PathVariable Long memberId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.ok(memberService.getMissionsOngoing(memberId, page, size));
+        return ApiResponse.onSuccess(SuccessCode.OK, memberService.getMissionsOngoing(memberId, page, size));
     }
 
     @GetMapping("/{memberId}/missions/completed")
@@ -34,23 +35,23 @@ public class MemberController {
             @PathVariable Long memberId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.ok(memberService.getMissionsCompleted(memberId, page, size));
+        return ApiResponse.onSuccess(SuccessCode.OK, memberService.getMissionsCompleted(memberId, page, size));
     }
 
     @GetMapping("/{memberId}/missions/stats")
     public ApiResponse<MemberDto.MissionStats> getMissionStats(@PathVariable Long memberId) {
-        return ApiResponse.ok(memberService.getMissionStats(memberId));
+        return ApiResponse.onSuccess(SuccessCode.OK, memberService.getMissionStats(memberId));
     }
 
     @DeleteMapping("/{memberId}/withdraw")
     public ApiResponse<Void> withdrawMember(@PathVariable Long memberId) {
         memberService.withdrawMember(memberId);
-        return ApiResponse.ok();
+        return ApiResponse.onSuccess(SuccessCode.OK);
     }
 
     @DeleteMapping("/{memberId}/permanent")
     public ApiResponse<Void> deleteMemberPermanently(@PathVariable Long memberId) {
         memberService.deleteMemberPermanently(memberId);
-        return ApiResponse.ok();
+        return ApiResponse.onSuccess(SuccessCode.OK);
     }
 }

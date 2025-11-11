@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public ApiResponse<Object> handleMethodNotAllowed(HttpRequestMethodNotSupportedException e) {
         log.warn("HTTP Method not allowed: {}", e.getMessage());
-        return ApiResponse.error(CommonResponseCode.BAD_REQUEST_ERROR, "Method Not Allowed");
+        return ApiResponse.onFailure(CommonResponseCode.BAD_REQUEST_ERROR, "Method Not Allowed");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
                 ? errorMessage.substring(0, errorMessage.length() - 2)
                 : "유효하지 않은 요청입니다";
 
-        return ApiResponse.error(CommonResponseCode.NOT_VALID_ERROR, message);
+        return ApiResponse.onFailure(CommonResponseCode.NOT_VALID_ERROR, message);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
     public ApiResponse<Object> handleMissingParameter(MissingServletRequestParameterException e) {
         log.warn("Missing required parameter: {}", e.getMessage());
         String message = "Missing required parameter : " + e.getParameterName();
-        return ApiResponse.error(CommonResponseCode.NOT_VALID_ERROR, message);
+        return ApiResponse.onFailure(CommonResponseCode.NOT_VALID_ERROR, message);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -57,14 +57,14 @@ public class GlobalExceptionHandler {
     public ApiResponse<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
         log.warn("Request body missing or malformed: {}", e.getMessage());
         String message = "Required request body is missing or malformed";
-        return ApiResponse.error(CommonResponseCode.NOT_VALID_ERROR, message);
+        return ApiResponse.onFailure(CommonResponseCode.NOT_VALID_ERROR, message);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiResponse<Object> handleNoResourceFoundException(NoResourceFoundException e) {
         log.warn("Resource not found: {}", e.getMessage());
-        return ApiResponse.error(CommonResponseCode.NOT_FOUND_ERROR);
+        return ApiResponse.onFailure(CommonResponseCode.NOT_FOUND_ERROR);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -74,11 +74,11 @@ public class GlobalExceptionHandler {
 
         // 유니크 제약 조건 위반
         if (e.getCause() instanceof ConstraintViolationException) {
-            return ApiResponse.error(CommonResponseCode.BAD_REQUEST_ERROR, "중복된 요청입니다.");
+            return ApiResponse.onFailure(CommonResponseCode.BAD_REQUEST_ERROR, "중복된 요청입니다.");
         }
 
         // 그 외 무결성 제약 위반
-        return ApiResponse.error(CommonResponseCode.BAD_REQUEST_ERROR, "데이터 무결성 예외가 발생했습니다.");
+        return ApiResponse.onFailure(CommonResponseCode.BAD_REQUEST_ERROR, "데이터 무결성 예외가 발생했습니다.");
     }
 
     @ExceptionHandler(CustomException.class)
@@ -86,9 +86,9 @@ public class GlobalExceptionHandler {
     public ApiResponse<Object> handleCustomException(CustomException e) {
         log.warn("Custom exception occurred: {}", e.getMessage());
         if (!e.getMessage().equals(e.getResponseCode().getMessage())) {
-            return ApiResponse.error(e.getResponseCode(), e.getMessage());
+            return ApiResponse.onFailure(e.getResponseCode(), e.getMessage());
         } else {
-            return ApiResponse.error(e.getResponseCode());
+            return ApiResponse.onFailure(e.getResponseCode());
         }
     }
 
@@ -96,13 +96,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<Object> handleRuntimeException(RuntimeException e) {
         log.warn("Runtime exception occurred: {}", e.getMessage());
-        return ApiResponse.error(CommonResponseCode.BAD_REQUEST_ERROR, e.getMessage());
+        return ApiResponse.onFailure(CommonResponseCode.BAD_REQUEST_ERROR, e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<Object> handleException(Exception e) {
         log.error("Exception occurred: ", e);
-        return ApiResponse.error(CommonResponseCode.INTERNAL_SERVER_ERROR);
+        return ApiResponse.onFailure(CommonResponseCode.INTERNAL_SERVER_ERROR);
     }
 }

@@ -2,6 +2,7 @@ package com.example.dobee.domain.review.controller;
 
 import com.example.dobee.domain.review.dto.ReviewDto;
 import com.example.dobee.domain.review.service.ReviewService;
+import com.example.dobee.global.code.SuccessCode;
 import com.example.dobee.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public class ReviewController {
     public ApiResponse<Void> createReview(@RequestBody ReviewDto.Request request) {
         reviewService.createReview(request.getMemberId(), request.getStoreId(),
                 request.getRating(), request.getContent());
-        return ApiResponse.ok();
+        return ApiResponse.onSuccess(SuccessCode.CREATED);
     }
 
     @GetMapping("/member/{memberId}")
@@ -27,7 +28,7 @@ public class ReviewController {
             @PathVariable Long memberId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.ok(reviewService.getReviewsMember(memberId, page, size));
+        return ApiResponse.onSuccess(SuccessCode.OK, reviewService.getReviewsMember(memberId, page, size));
     }
 
     @GetMapping("/store/{storeId}")
@@ -35,7 +36,7 @@ public class ReviewController {
             @PathVariable Long storeId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.ok(reviewService.getReviewsStore(storeId, page, size));
+        return ApiResponse.onSuccess(SuccessCode.OK, reviewService.getReviewsActive(storeId, page, size));
     }
 
     @GetMapping("/member/{memberId}/active")
@@ -43,12 +44,12 @@ public class ReviewController {
             @PathVariable Long memberId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.ok(reviewService.getReviewsActive(memberId, page, size));
+        return ApiResponse.onSuccess(SuccessCode.OK, reviewService.getReviewsActive(memberId, page, size));
     }
 
     @GetMapping("/member/{memberId}/count")
     public ApiResponse<Long> getReviewCount(@PathVariable Long memberId) {
-        return ApiResponse.ok(reviewService.getReviewCount(memberId));
+        return ApiResponse.onSuccess(SuccessCode.OK, reviewService.getReviewCount(memberId));
     }
 
     @GetMapping("/my")
@@ -59,6 +60,6 @@ public class ReviewController {
             Pageable pageable
     ){
         Page<ReviewDto.Response> myReviews = reviewService.getMyReviews(memberId, storeName, rating, pageable);
-        return ApiResponse.ok(myReviews);
+        return ApiResponse.onSuccess(SuccessCode.OK, myReviews);
     }
 }

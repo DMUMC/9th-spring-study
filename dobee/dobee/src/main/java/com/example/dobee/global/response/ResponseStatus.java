@@ -1,7 +1,7 @@
 package com.example.dobee.global.response;
 
-import com.example.dobee.global.code.CommonResponseCode;
 import com.example.dobee.global.code.ResponseCode;
+import com.example.dobee.global.code.SuccessCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,25 +16,21 @@ public class ResponseStatus {
     private String message;
     private String description;
 
-    public static ResponseStatus ok() {
+    public static ResponseStatus onSuccess(SuccessCode successCode) {
         return ResponseStatus.builder()
-                .statusCode(CommonResponseCode.OK.getStatusCode())
-                .message(CommonResponseCode.OK.getMessage())
+                .statusCode(successCode.getStatusCode())
+                .message(successCode.getMessage())
                 .build();
     }
 
-    public static ResponseStatus error() {
-        return error(CommonResponseCode.INTERNAL_SERVER_ERROR);
-    }
-
-    public static ResponseStatus error(ResponseCode responseCode) {
+    public static ResponseStatus onFailure(ResponseCode responseCode) {
         return ResponseStatus.builder()
                 .statusCode(responseCode.getStatusCode())
                 .message(responseCode.getMessage())
                 .build();
     }
 
-    public static ResponseStatus error(ResponseCode responseCode, String description) {
+    public static ResponseStatus onFailure(ResponseCode responseCode, String description) {
         return ResponseStatus.builder()
                 .statusCode(responseCode.getStatusCode())
                 .message(responseCode.getMessage())
