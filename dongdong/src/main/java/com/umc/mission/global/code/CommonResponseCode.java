@@ -7,6 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CommonResponseCode implements ResponseCode {
 
+    /**
+     * 응답을 위한 Enum 상수 정의
+     */
     OK("C000", "success"),
     BAD_REQUEST_ERROR("C001", "api bad request exception"),
     REQUEST_BODY_MISSING_ERROR("C002", "required request body is missing"),

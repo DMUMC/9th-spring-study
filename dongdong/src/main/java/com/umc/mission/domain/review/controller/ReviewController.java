@@ -17,6 +17,9 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    /**
+     * week7 데이터가 없는 성공 응답
+     */
     @PostMapping
     public ApiResponse<Void> createReview(@RequestBody ReviewDto.Request request) {
         reviewService.createReview(request.getMemberId(), request.getStoreId(),
@@ -48,6 +51,9 @@ public class ReviewController {
         return ApiResponse.ok(reviewService.getReviewsActive(memberId, page, size));
     }
 
+    /**
+     * week7 데이터가 있는 성공 응답
+     */
     @GetMapping("/member/{memberId}/count")
     public ApiResponse<Long> getReviewCount(@PathVariable Long memberId) {
         return ApiResponse.ok(reviewService.getReviewCount(memberId));

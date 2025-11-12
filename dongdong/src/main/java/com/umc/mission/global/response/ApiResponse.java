@@ -6,6 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * 모든 응답이 {"status": {...}, "body": {...}} 구조를 갖도록 통일
+ */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,10 +18,16 @@ public class ApiResponse<T> {
     private ResponseStatus status;
     private T body;
 
+    /**
+     * DELETE, POST 요청 등 별도 데이터 없이 성공 상태만 반환
+     */
     public static <T> ApiResponse<T> ok() {
         return ApiResponse.ok(null);
     }
 
+    /**
+     * GET 요청 등 데이터와 함께 성공 상태 반환
+     */
     public static <T> ApiResponse<T> ok(T body) {
         var apiResponse = new ApiResponse<T>();
         apiResponse.status = ResponseStatus.ok();
