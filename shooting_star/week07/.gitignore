@@ -1,31 +1,26 @@
-### IntelliJ ###
-.idea
+# Created by Gemini
+
+# IntelliJ
+.idea/
 *.iml
 *.iws
 *.ipr
-/out/
-/classes/
+out/
 
-# Local configuration
-*.properties
-*.xml
-
-### Gradle ###
-/build/
+# Gradle
+build/
 .gradle/
-!/build/generated-src/
 
-# QueryDSL, Spring Boot
-/target/
+# OS
+.DS_Store
+Thumbs.db
 
 # Log files
+logs/
 *.log
 
 # Temp files
 *.tmp
 
-# Dependency storage
-/libs/
-/repo/
-
+# Environment variables
 .env
