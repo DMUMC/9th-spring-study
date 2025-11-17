@@ -1,9 +1,10 @@
 package com.example.umc9th.domain.review.repository;
 
-import com.example.umc9th.domain.review.entity.Review;
-import com.example.umc9th.domain.store.entity.QStore;
+import com.example.umc9th.domain.review.dto.ReviewResponse;
 import com.example.umc9th.domain.review.entity.QReview;
+import com.example.umc9th.domain.store.entity.QStore;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -16,8 +17,12 @@ public class ReviewRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    // ✅ 간단한 QueryDSL 쿼리
-    public List<Review> findMyReviews(Long memberId, String storeName, Double minStar, Double maxStar) {
+    public List<ReviewResponse> findMyReviews(
+            Long memberId,
+            String storeName,
+            Integer minStar,
+            Integer maxStar
+    ) {
         QReview review = QReview.review;
         QStore store = QStore.store;
 
@@ -33,8 +38,16 @@ public class ReviewRepository {
         }
 
         return queryFactory
-                .selectFrom(review)
-                .join(review.store, store).fetchJoin()
+                .select(Projections.constructor(
+                        ReviewResponse.class,
+                        review.id,
+                        store.name,
+                        review.rating,
+                        review.content,
+                        review.createdAt        // LocalDateTime createdAt (BaseEntity 상속)
+                ))
+                .from(review)
+                .join(review.store, store)
                 .where(where)
                 .orderBy(review.createdAt.desc())
                 .fetch();

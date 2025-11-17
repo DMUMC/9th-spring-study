@@ -13,21 +13,21 @@ public class Review extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch=FetchType.LAZY, optional=false)
-    @JoinColumn(name="store_id", nullable=false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    @ManyToOne(fetch=FetchType.LAZY, optional=false)
-    @JoinColumn(name="user_id", nullable=false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private Member member;
 
-    @Column(name="rating", nullable=false)
+    @Column(name = "rating", nullable = false)
     private Integer rating;
 
     @Lob
-    @Column(name="content", nullable=false)
+    @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name="is_deleted", nullable=false)
+    @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 }

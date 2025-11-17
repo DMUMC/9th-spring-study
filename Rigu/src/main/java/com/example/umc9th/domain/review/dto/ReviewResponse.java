@@ -8,4 +8,5 @@ public record ReviewResponse(
         Integer rating,
         String content,
         LocalDateTime createdAt
-) {}
+) {
+}
