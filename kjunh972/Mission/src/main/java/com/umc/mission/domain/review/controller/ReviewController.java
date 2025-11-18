@@ -4,6 +4,8 @@ import com.umc.mission.domain.review.dto.ReviewDto;
 import com.umc.mission.domain.review.entity.Review;
 import com.umc.mission.domain.review.service.ReviewService;
 import com.umc.mission.global.response.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +15,13 @@ import java.math.BigDecimal;
 @RestController
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
+@Tag(name = "리뷰 API", description = "리뷰 관련 API")
 public class ReviewController {
 
     private final ReviewService reviewService;
 
     @PostMapping
+    @Operation(summary = "가게에 리뷰 추가하기", description = "특정 가게에 리뷰를 작성합니다.")
     public ApiResponse<Void> createReview(@RequestBody ReviewDto.Request request) {
         reviewService.createReview(request.getMemberId(), request.getStoreId(),
                                     request.getRating(), request.getContent());

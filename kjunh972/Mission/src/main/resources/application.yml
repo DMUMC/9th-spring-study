@@ -19,6 +19,15 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
+# Swagger Configuration
+springdoc:
+  swagger-ui:
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
 # Notification Configuration
 notification:
   discord:

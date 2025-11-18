@@ -20,7 +20,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = {"com.umc.mission.domain"})
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
