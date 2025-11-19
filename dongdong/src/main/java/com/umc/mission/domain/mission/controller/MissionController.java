@@ -3,6 +3,7 @@ package com.umc.mission.domain.mission.controller;
 import com.umc.mission.domain.mission.dto.MissionDto;
 import com.umc.mission.domain.mission.service.MissionService;
 import com.umc.mission.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,13 @@ public class MissionController {
             @RequestParam Long missionId) {
         missionService.challengeMissionWithoutLock(memberId, missionId);
         return ApiResponse.ok();
+    }
+
+    // 3. 가게에 미션 추가하기 API
+    @PostMapping
+    public ApiResponse<Long> createMission(@RequestBody @Valid MissionDto.Request request) {
+        Long missionId = missionService.createMission(request);
+        return ApiResponse.ok(missionId);
     }
 
     @PostMapping("/challenges/with-lock")

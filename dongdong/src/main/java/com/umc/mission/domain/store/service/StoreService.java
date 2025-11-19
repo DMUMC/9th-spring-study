@@ -1,7 +1,12 @@
 package com.umc.mission.domain.store.service;
 
+import com.umc.mission.domain.region.entity.Region;
+import com.umc.mission.domain.region.repository.RegionRepository;
+import com.umc.mission.domain.store.dto.StoreRequestDto;
 import com.umc.mission.domain.store.dto.StoreSearchDto;
 import com.umc.mission.domain.store.entity.Store;
+import com.umc.mission.domain.store.entity.StoreCategory;
+import com.umc.mission.domain.store.repository.StoreCategoryRepository;
 import com.umc.mission.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +23,28 @@ import java.util.List;
 public class StoreService {
 
     private final StoreRepository storeRepository;
+    private final RegionRepository regionRepository;
+    private final StoreCategoryRepository storeCategoryRepository;
 
+
+    @Transactional
+    public Long createStore(StoreRequestDto request) {
+        Region region = regionRepository.findById(request.getRegionId())
+                .orElseThrow(() -> new IllegalArgumentException("Region not found"));
+
+        StoreCategory category = storeCategoryRepository.findById(request.getStoreCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        Store store = Store.builder()
+                .region(region)
+                .category(category)
+                .name(request.getName())
+                .address(request.getAddress())
+                .imageUrl(request.getImageUrl())
+                .build();
+
+        return storeRepository.save(store).getId();
+    }
     /**
      * 가게 검색 (지역 필터, 이름 검색, 정렬, 페이징)
      */

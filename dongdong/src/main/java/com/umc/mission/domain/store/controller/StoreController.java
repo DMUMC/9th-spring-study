@@ -1,8 +1,10 @@
 package com.umc.mission.domain.store.controller;
 
+import com.umc.mission.domain.store.dto.StoreRequestDto;
 import com.umc.mission.domain.store.dto.StoreSearchDto;
 import com.umc.mission.domain.store.service.StoreService;
 import com.umc.mission.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,13 @@ public class StoreController {
                 regionId, regionIds, searchKeyword, sortBy, page, size);
 
         return ApiResponse.ok(response);
+    }
+
+    // 1. 특정 지역에 가게 추가하기 API
+    @PostMapping
+    public ApiResponse<Long> createStore(@RequestBody @Valid StoreRequestDto request) {
+        Long storeId = storeService.createStore(request);
+        return ApiResponse.ok(storeId);
     }
 
     /**

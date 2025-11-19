@@ -1,5 +1,7 @@
 package com.umc.mission.domain.mission.service;
 
+import com.umc.mission.domain.store.entity.Store;              
+import com.umc.mission.domain.store.repository.StoreRepository;
 import com.umc.mission.domain.member.entity.Member;
 import com.umc.mission.domain.member.exception.MemberNotFoundException;
 import com.umc.mission.domain.member.repository.MemberRepository;
@@ -11,6 +13,7 @@ import com.umc.mission.domain.mission.exception.AlreadyChallengedException;
 import com.umc.mission.domain.mission.exception.MissionNotFoundException;
 import com.umc.mission.domain.mission.repository.MemberMissionRepository;
 import com.umc.mission.domain.mission.repository.MissionRepository;
+import com.umc.mission.domain.review.exception.StoreNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,6 +32,7 @@ public class MissionService {
     private final MemberMissionRepository memberMissionRepository;
     private final MemberRepository memberRepository;
     private final MissionRepository missionRepository;
+    private final StoreRepository storeRepository;
 
     @Transactional
     public void challengeMissionWithoutLock(Long memberId, Long missionId) {
@@ -74,6 +78,23 @@ public class MissionService {
                 .build();
 
         memberMissionRepository.save(memberMission);
+    }
+
+    @Transactional
+    public Long createMission(MissionDto.Request request) {
+        Store store = storeRepository.findById(request.getStoreId())
+                .orElseThrow(() -> new StoreNotFoundException("Store not found"));
+
+        Mission mission = Mission.builder()
+                .store(store)
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .rewardPoint(request.getRewardPoint())
+                .deadlineDays(request.getDeadlineDays())
+                // status는 디폴트 값이 있으므로 생략 가능
+                .build();
+
+        return missionRepository.save(mission).getId();
     }
 
     @Transactional(readOnly = true)
