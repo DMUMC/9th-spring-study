@@ -15,6 +15,9 @@ import java.util.Optional;
 
 @Repository
 public interface MemberMissionRepository extends JpaRepository<MemberMission, Long> {
+    // 유저가 같은 미션을 중복으로 추가하는 것을 방지함
+    boolean existsByMemberIdAndMissionIdAndStatus(Long memberId, Long missionId, MemberMissionStatus status);
+
 
     // 락 없이 조회 (동시성 문제 발생 가능)
     @Query("SELECT mm FROM MemberMission mm WHERE mm.member.id = :memberId AND mm.mission.id = :missionId")
