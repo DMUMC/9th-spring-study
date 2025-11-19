@@ -1,9 +1,11 @@
 package com.example.dobee.domain.mission.Controller;
 
+import com.example.dobee.domain.mission.dto.MemberMissionDto;
 import com.example.dobee.domain.mission.dto.MissionDto;
 import com.example.dobee.domain.mission.service.MissionService;
 import com.example.dobee.global.code.SuccessCode;
 import com.example.dobee.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +17,16 @@ public class MissionController {
 
     private final MissionService missionService;
 
+    @PostMapping("/create/{storeId}")
+    public ApiResponse<MissionDto.Response> addMissionToStore(
+            @PathVariable Long storeId,
+            @Valid @RequestBody MissionDto.AddMissionRequest request) {
+        MissionDto.Response response = missionService.addMission(storeId, request);
+        return ApiResponse.onSuccess(SuccessCode.CREATED, response);
+    }
+
     @PostMapping("/challenges/without-lock")
-    public ApiResponse<Void> challengeMissionWithoutLock(
+    public ApiResponse<MemberMissionDto.Response> challengeMissionWithoutLock(
             @RequestParam Long memberId,
             @RequestParam Long missionId) {
         missionService.challengeMissionWithoutLock(memberId, missionId);

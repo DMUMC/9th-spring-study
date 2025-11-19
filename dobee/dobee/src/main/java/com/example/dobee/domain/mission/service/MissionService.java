@@ -3,6 +3,7 @@ package com.example.dobee.domain.mission.service;
 import com.example.dobee.domain.member.entity.Member;
 import com.example.dobee.domain.member.exception.MemberNotFoundException;
 import com.example.dobee.domain.member.repository.MemberRepository;
+import com.example.dobee.domain.mission.dto.MemberMissionDto;
 import com.example.dobee.domain.mission.dto.MissionDto;
 import com.example.dobee.domain.mission.entity.MemberMission;
 import com.example.dobee.domain.mission.entity.Mission;
@@ -11,6 +12,9 @@ import com.example.dobee.domain.mission.exception.AlreadyChallengedException;
 import com.example.dobee.domain.mission.exception.MissionNotFoundException;
 import com.example.dobee.domain.mission.repository.MemberMissionRepository;
 import com.example.dobee.domain.mission.repository.MissionRepository;
+import com.example.dobee.domain.review.exception.StoreNotFoundException;
+import com.example.dobee.domain.store.entity.Store;
+import com.example.dobee.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,6 +33,19 @@ public class MissionService {
     private final MemberMissionRepository memberMissionRepository;
     private final MemberRepository memberRepository;
     private final MissionRepository missionRepository;
+    private final StoreRepository storeRepository;
+
+    @Transactional
+    public MissionDto.Response addMission(Long storeId, MissionDto.AddMissionRequest request) {
+
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(StoreNotFoundException::new);
+
+        Mission newMission = request.toEntity(store);
+        Mission savedMission = missionRepository.save(newMission);
+
+        return MissionDto.Response.from(savedMission);
+    }
 
     @Transactional
     public void challengeMissionWithoutLock(Long memberId, Long missionId) {
@@ -54,7 +71,7 @@ public class MissionService {
     }
 
     @Transactional
-    public void challengeMissionWithLock(Long memberId, Long missionId) {
+    public MemberMissionDto.Response challengeMissionWithLock(Long memberId, Long missionId) {
         log.info("Challenge mission with lock - memberId: {}, missionId: {}", memberId, missionId);
 
         Optional<MemberMission> existing = memberMissionRepository.findByMemberIdAndMissionIdWithLock(memberId, missionId);
@@ -73,7 +90,9 @@ public class MissionService {
                 .deadlineAt(LocalDateTime.now().plusDays(7))
                 .build();
 
-        memberMissionRepository.save(memberMission);
+        MemberMission savedMemberMission = memberMissionRepository.save(memberMission);
+
+        return MemberMissionDto.Response.from(savedMemberMission);
     }
 
     @Transactional(readOnly = true)
