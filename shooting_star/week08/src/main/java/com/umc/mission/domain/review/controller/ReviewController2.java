@@ -22,12 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReviewController2 {
     private final ReviewCommandService reviewCommandService;
 
+    // 가게에 리뷰 추가하기 api
     @PostMapping("/{storeId}/review")
     public ApiResponse<CreateReviewResultDTO> createReview(
             @PathVariable(name = "storeId") Long storeId,
             @RequestBody @Valid StoreReviewReqDTO.CreateReviewDTO request
     ){
-        //
+
         Review review = reviewCommandService.createReview(1L, storeId, request);
 
         BaseSuccessCode code = GeneralSuccessCode.OK;

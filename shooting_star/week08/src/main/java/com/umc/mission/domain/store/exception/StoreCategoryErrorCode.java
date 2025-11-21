@@ -1,4 +1,4 @@
-package com.umc.mission.domain.member.exception.code;
+package com.umc.mission.domain.store.exception;
 
 import com.umc.mission.global.apiPayload.code.BaseErrorCode;
 import lombok.AllArgsConstructor;
@@ -7,11 +7,11 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum MemberErrorCode implements BaseErrorCode {
+public enum StoreCategoryErrorCode implements BaseErrorCode {
     NOT_FOUND(
             HttpStatus.NOT_FOUND,
-            "MEMBER404_1",
-            "해당 사용자를 찾지 못했습니다."
+            "STORE_CATEGORY404_1",
+            "가게 카테고리를 찾을 수 없습니다."
     ),
     ;
 

@@ -8,10 +8,10 @@ import com.umc.mission.domain.mission.dto.MissionDto2;
 import com.umc.mission.domain.mission.entity.MemberMission;
 import com.umc.mission.domain.mission.entity.Mission;
 import com.umc.mission.domain.mission.enums.MemberMissionStatus;
+import com.umc.mission.domain.mission.exception.code.MissionErrorCode;
+import com.umc.mission.domain.mission.exception.code.MissionHandler;
 import com.umc.mission.domain.mission.repository.MemberMissionRepository;
 import com.umc.mission.domain.mission.repository.MissionRepository;
-import com.umc.mission.global.apiPayload.code.GeneralErrorCode;
-import com.umc.mission.global.apiPayload.exception.GeneralException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ public class MissionServiceCommandImpl implements MissionServiceCommand {
 
         // 미션 조회
         Mission mission = missionRepository.findById(missionId)
-                .orElseThrow(() -> new GeneralException(GeneralErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new MissionHandler(MissionErrorCode.NOT_FOUND));
 
         boolean isExist = memberMissionRepository.existsByMemberIdAndMissionIdAndStatus(
                 missionId,
@@ -45,7 +45,7 @@ public class MissionServiceCommandImpl implements MissionServiceCommand {
         );
 
         if(isExist){
-            throw new GeneralException(GeneralErrorCode.BAD_REQUEST);
+            throw new MissionHandler(MissionErrorCode.ALREADY_CHALLENGE);
         }
 
         MemberMission memberMission = request.toEntity(member, mission);

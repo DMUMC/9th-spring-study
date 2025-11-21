@@ -1,4 +1,4 @@
-package com.umc.mission.domain.member.exception.code;
+package com.umc.mission.domain.mission.exception.code;
 
 import com.umc.mission.global.apiPayload.code.BaseErrorCode;
 import lombok.AllArgsConstructor;
@@ -7,12 +7,17 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum MemberErrorCode implements BaseErrorCode {
+public enum MissionErrorCode implements BaseErrorCode {
+    ALREADY_CHALLENGE(
+            HttpStatus.BAD_REQUEST,
+            "MISSION401_1",
+            "이미 도전중인 미션입니다."
+    ),
     NOT_FOUND(
             HttpStatus.NOT_FOUND,
-            "MEMBER404_1",
-            "해당 사용자를 찾지 못했습니다."
-    ),
+            "MISSION404_1",
+            "요청한 미션 정보가 없습니다."
+    )
     ;
 
     private final HttpStatus httpStatus;

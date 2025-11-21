@@ -48,7 +48,7 @@ public class MissionDto2 {
                     .memberMissionId(memberMission.getId())
                     .memberId(memberMission.getMember().getId())
                     .missionId(memberMission.getMission().getId())
-                    .status(memberMission.getStatus().name())
+                    .status(memberMission.getStatus().name()) // Enum -> String
                     .deadlineAt(memberMission.getDeadlineAt())
                     .build();
         }
