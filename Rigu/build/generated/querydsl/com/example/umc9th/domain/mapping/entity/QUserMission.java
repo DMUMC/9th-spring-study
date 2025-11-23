@@ -2,9 +2,8 @@ package com.example.umc9th.domain.mapping.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
+import com.example.umc9th.domain.mission.QMission;
 import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.dsl.StringTemplate;
 
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.annotations.Generated;
@@ -40,7 +39,7 @@ public class QUserMission extends EntityPathBase<UserMission> {
 
     public final com.example.umc9th.domain.member.entity.QMember member;
 
-    public final com.example.umc9th.domain.mission.entity.QMission mission;
+    public final QMission mission;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -64,7 +63,7 @@ public class QUserMission extends EntityPathBase<UserMission> {
     public QUserMission(Class<? extends UserMission> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.member = inits.isInitialized("member") ? new com.example.umc9th.domain.member.entity.QMember(forProperty("member")) : null;
-        this.mission = inits.isInitialized("mission") ? new com.example.umc9th.domain.mission.entity.QMission(forProperty("mission"), inits.get("mission")) : null;
+        this.mission = inits.isInitialized("mission") ? new QMission(forProperty("mission"), inits.get("mission")) : null;
     }
 
 }

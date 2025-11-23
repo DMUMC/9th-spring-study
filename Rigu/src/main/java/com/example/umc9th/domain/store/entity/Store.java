@@ -2,9 +2,15 @@ package com.example.umc9th.domain.store.entity;
 
 import com.example.umc9th.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "store")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Store extends BaseEntity {
 
     @Id
@@ -37,4 +43,27 @@ public class Store extends BaseEntity {
 
     @Column(name="longitude", nullable=false)
     private Double longitude;
+
+    @Builder
+    private Store(
+            String name,
+            String address,
+            String detailAddress,
+            String managerName,
+            String managerNumber,
+            String openTime,
+            String closeTime,
+            Double latitude,
+            Double longitude
+    ) {
+        this.name = name;
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.managerName = managerName;
+        this.managerNumber = managerNumber;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }

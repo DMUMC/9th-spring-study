@@ -1,10 +1,9 @@
-package com.example.umc9th.domain.mission.entity;
+package com.example.umc9th.domain.mission;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
+import com.example.umc9th.domain.mission.entity.Mission;
 import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.dsl.StringTemplate;
 
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.annotations.Generated;

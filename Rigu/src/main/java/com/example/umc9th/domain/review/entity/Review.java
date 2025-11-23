@@ -4,9 +4,15 @@ import com.example.umc9th.domain.member.entity.Member;
 import com.example.umc9th.domain.store.entity.Store;
 import com.example.umc9th.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "review")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Review extends BaseEntity {
 
     @Id
@@ -30,4 +36,13 @@ public class Review extends BaseEntity {
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
+
+    @Builder
+    private Review(Store store, Member member, Integer rating, String content) {
+        this.store = store;
+        this.member = member;
+        this.rating = rating;
+        this.content = content;
+        this.isDeleted = false;
+    }
 }

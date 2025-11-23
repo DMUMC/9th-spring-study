@@ -6,12 +6,14 @@ import com.example.umc9th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import lombok.Getter;
 
 @Entity
 @Table(name = "member")
 public class Member extends BaseEntity {
 
     @Id
+    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -72,7 +74,5 @@ public class Member extends BaseEntity {
         this.socialType = socialType;
         this.point = 0;
     }
-
-    public Long getId() { return id; }
 }
 
