@@ -1,0 +1,45 @@
+server:
+  port: 9098
+
+spring:
+  application:
+    name: umc-test
+  
+  # H2 Database 설정 (메모리 DB - 실제 DB 설치 필요 없음!)
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: 
+  
+  jpa:
+    hibernate:
+      ddl-auto: create  # 애플리케이션 시작시마다 테이블 새로 생성
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+
+  # H2 Console 활성화 (웹에서 DB 확인 가능!)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+
+# Swagger 설정
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
