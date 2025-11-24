@@ -1,0 +1,24 @@
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Gradle
+build/
+.gradle/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Log files
+logs/
+*.log
+
+# Temp files
+*.tmp
+
+# Environment variables
+.env
