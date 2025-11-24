@@ -12,6 +12,7 @@ import com.umc.mission.domain.review.repository.ReviewRepository;
 import com.umc.mission.domain.store.entity.Store;
 import com.umc.mission.domain.review.exception.StoreNotFoundException;
 import com.umc.mission.domain.store.repository.StoreRepository;
+import com.umc.mission.global.exception.InvalidPageException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -55,6 +56,14 @@ public class ReviewService {
                 .build();
 
         reviewRepository.save(review);
+    }
+
+    // 내가 작성한 리뷰 목록 조회 (페이징)
+    @Transactional(readOnly = true)
+    public ReviewDto.PageResponse getMyReviews(Long memberId, int page) {
+        int size = 10;
+        Page<Review> reviewPage = reviewRepository.findByMemberId(memberId, PageRequest.of(page - 1, size));
+        return ReviewDto.PageResponse.from(reviewPage);
     }
 
     // 특정 회원의 리뷰 목록 조회

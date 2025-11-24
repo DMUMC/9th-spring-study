@@ -4,7 +4,9 @@ import com.umc.mission.domain.review.dto.ReviewDto;
 import com.umc.mission.domain.review.entity.Review;
 import com.umc.mission.domain.review.service.ReviewService;
 import com.umc.mission.global.response.ApiResponse;
+import com.umc.mission.global.validation.ValidPage;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,14 @@ public class ReviewController {
         reviewService.createReview(request.getMemberId(), request.getStoreId(),
                                     request.getRating(), request.getContent());
         return ApiResponse.ok();
+    }
+
+    @GetMapping("/my")
+    @Operation(summary = "내가 작성한 리뷰 목록 조회", description = "특정 회원이 작성한 리뷰를 페이징으로 조회합니다. (10개씩)")
+    public ApiResponse<ReviewDto.PageResponse> getMyReviews(
+            @Parameter(description = "회원 ID") @RequestParam Long memberId,
+            @Parameter(description = "페이지 번호 (1 이상)") @ValidPage @RequestParam int page) {
+        return ApiResponse.ok(reviewService.getMyReviews(memberId, page));
     }
 
     @GetMapping("/member/{memberId}")

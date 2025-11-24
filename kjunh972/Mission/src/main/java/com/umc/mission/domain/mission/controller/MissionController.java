@@ -1,8 +1,10 @@
 package com.umc.mission.domain.mission.controller;
 
+import com.umc.mission.domain.mission.dto.MemberMissionDto;
 import com.umc.mission.domain.mission.dto.MissionDto;
 import com.umc.mission.domain.mission.service.MissionService;
 import com.umc.mission.global.response.ApiResponse;
+import com.umc.mission.global.validation.ValidPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -67,5 +69,28 @@ public class MissionController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ApiResponse.ok(missionService.getMissionsByStatus(status, page, size));
+    }
+
+    @GetMapping("/store/{storeId}")
+    @Operation(summary = "특정 가게의 미션 목록 조회", description = "특정 가게의 활성화된 미션을 페이징으로 조회합니다. (10개씩)")
+    public ApiResponse<MissionDto.PageResponse> getMissionsByStore(
+            @Parameter(description = "가게 ID") @PathVariable Long storeId,
+            @Parameter(description = "페이지 번호 (1 이상)") @ValidPage @RequestParam int page) {
+        return ApiResponse.ok(missionService.getMissionsByStore(storeId, page));
+    }
+
+    @GetMapping("/my/ongoing")
+    @Operation(summary = "내가 진행중인 미션 목록 조회", description = "특정 회원이 진행중인 미션을 페이징으로 조회합니다. (10개씩)")
+    public ApiResponse<MemberMissionDto.PageResponse> getMyOngoingMissions(
+            @Parameter(description = "회원 ID") @RequestParam Long memberId,
+            @Parameter(description = "페이지 번호 (1 이상)") @ValidPage @RequestParam int page) {
+        return ApiResponse.ok(missionService.getMyOngoingMissions(memberId, page));
+    }
+
+    @PatchMapping("/{memberMissionId}/complete")
+    @Operation(summary = "진행중인 미션 완료로 변경", description = "진행중인 미션을 완료 상태로 변경하고, 변경된 미션 정보를 반환합니다.")
+    public ApiResponse<MemberMissionDto.Response> completeMission(
+            @Parameter(description = "회원-미션 ID") @PathVariable Long memberMissionId) {
+        return ApiResponse.ok(missionService.completeMission(memberMissionId));
     }
 }

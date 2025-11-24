@@ -6,7 +6,7 @@ import com.umc.mission.global.code.CommonResponseCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -77,16 +77,40 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<Object> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         log.warn("Data integrity violation: {}", e.getMessage());
-        
+
         // 유니크 제약 조건 위반
-        if (e.getCause() instanceof ConstraintViolationException) {
+        if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
             return ApiResponse.error(CommonResponseCode.BAD_REQUEST_ERROR, "중복된 요청입니다.");
         }
-        
+
         // 그 외 무결성 제약 위반
         return ApiResponse.error(CommonResponseCode.BAD_REQUEST_ERROR, "데이터 무결성 예외가 발생했습니다.");
     }
     
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse<Object> handleConstraintViolationException(jakarta.validation.ConstraintViolationException e) {
+        log.warn("Constraint violation exception occurred: {}", e.getMessage());
+
+        StringBuilder errorMessage = new StringBuilder();
+        e.getConstraintViolations().forEach(violation ->
+            errorMessage.append(violation.getMessage()).append(", ")
+        );
+
+        String message = !errorMessage.isEmpty()
+            ? errorMessage.substring(0, errorMessage.length() - 2)
+            : "유효하지 않은 요청입니다";
+
+        return ApiResponse.error(CommonResponseCode.INVALID_PAGE_ERROR, message);
+    }
+
+    @ExceptionHandler(InvalidPageException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse<Object> handleInvalidPageException(InvalidPageException e) {
+        log.warn("Invalid page exception occurred: {}", e.getMessage());
+        return ApiResponse.error(e.getResponseCode());
+    }
+
     @ExceptionHandler(CustomException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<Object> handleCustomException(CustomException e) {

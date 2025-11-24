@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class MissionDto {
 
@@ -36,6 +38,36 @@ public class MissionDto {
                     .deadlineDays(mission.getDeadlineDays())
                     .status(mission.getStatus().name())
                     .createdAt(mission.getCreatedAt())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PageResponse {
+        private List<Response> missions;
+        private long totalElements;
+        private int numberOfElements;
+        private int totalPages;
+        private int currentPage;
+        private int pageSize;
+        private boolean isFirst;
+        private boolean isLast;
+
+        public static PageResponse from(Page<Mission> page) {
+            return PageResponse.builder()
+                    .missions(page.getContent().stream()
+                            .map(Response::from)
+                            .toList())
+                    .totalElements(page.getTotalElements())
+                    .numberOfElements(page.getNumberOfElements())
+                    .totalPages(page.getTotalPages())
+                    .currentPage(page.getNumber())
+                    .pageSize(page.getSize())
+                    .isFirst(page.isFirst())
+                    .isLast(page.isLast())
                     .build();
         }
     }
