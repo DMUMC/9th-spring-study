@@ -6,13 +6,20 @@ import com.umc.mission.domain.review.service.ReviewService;
 import com.umc.mission.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import com.umc.mission.global.validation.annotation.CheckPage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+
 
 import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
+@Validated
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -28,11 +35,21 @@ public class ReviewController {
     }
 
     @GetMapping("/member/{memberId}")
-    public ApiResponse<Page<ReviewDto.Response>> getReviewsMember(
+    @Operation(summary = "내가 작성한 리뷰 목록 조회 API", description = "특정 회원이 작성한 리뷰 목록을 조회합니다. (페이징 포함)")
+    @Parameters({
+            @Parameter(name = "memberId", description = "회원의 ID"),
+            @Parameter(name = "page", description = "페이지 번호 (1부터 시작)")
+    })
+    public ApiResponse<ReviewDto.PageResponse> getReviewsMember(
             @PathVariable Long memberId,
-            @RequestParam(defaultValue = "0") int page,
+            @CheckPage @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.ok(reviewService.getReviewsMember(memberId, page, size));
+
+        // 1. Service에서 Entity Page를 가져옵니다 (page - 1 처리)
+        Page<Review> reviewPage = reviewService.getReviewList(memberId, page - 1, size);
+
+        // 2. DTO의 from 메서드를 통해 PageResponse로 변환하여 반환합니다
+        return ApiResponse.ok(ReviewDto.PageResponse.from(reviewPage));
     }
 
     @GetMapping("/store/{storeId}")
@@ -73,4 +90,6 @@ public class ReviewController {
         Page<Review> reviewPage = reviewService.getMyReviewsByFilters(memberId, storeId, minRating, maxRating, page, size);
         return ApiResponse.ok(ReviewDto.PageResponse.from(reviewPage));
     }
+
+
 }

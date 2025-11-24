@@ -124,4 +124,13 @@ public class MissionService {
         return missionRepository.findByStatus(status, PageRequest.of(page, size))
                 .map(MissionDto.Response::from);
     }
+
+    @Transactional(readOnly = true)
+    public Page<MissionDto.Response> getMissionsByStore(Long storeId, int page, int size) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new StoreNotFoundException("Store not found"));
+
+        return missionRepository.findByStoreIdAndStatus(storeId, "ACTIVE", PageRequest.of(page, size))
+                .map(MissionDto.Response::from);
+    }
 }

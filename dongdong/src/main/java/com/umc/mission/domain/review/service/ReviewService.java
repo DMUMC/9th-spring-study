@@ -91,4 +91,10 @@ public class ReviewService {
                                               int page, int size) {
         return reviewRepository.findMyReviewsByFilters(memberId, storeId, minRating, maxRating, PageRequest.of(page, size));
     }
+
+    // Controller 변환용 Entity Page 반환 메서드
+    @Transactional(readOnly = true)
+    public Page<Review> getReviewList(Long memberId, int page, int size) {
+        return reviewRepository.findByMemberId(memberId, PageRequest.of(page, size));
+    }
 }
