@@ -66,4 +66,9 @@ public class MemberMission extends BaseEntity {
     @OneToMany(mappedBy = "memberMission", cascade = CascadeType.ALL)
     @Builder.Default
     private List<PointHistory> pointHistories = new ArrayList<>();
+
+    public void complete() {
+        this.status = MemberMissionStatus.COMPLETED;
+        this.completedAt = LocalDateTime.now();
+    }
 }

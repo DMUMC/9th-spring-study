@@ -1,6 +1,7 @@
 package com.example.dobee.global.exception;
 
 import com.example.dobee.global.code.CommonResponseCode;
+import com.example.dobee.global.code.PageErrorCode;
 import com.example.dobee.global.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
@@ -90,6 +91,13 @@ public class GlobalExceptionHandler {
         } else {
             return ApiResponse.onFailure(e.getResponseCode());
         }
+    }
+
+    @ExceptionHandler(PageException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse<Object> handlePageException(PageException e) {
+        log.warn("Page exception occurred: {}", e.getMessage());
+        return ApiResponse.onFailure(PageErrorCode.INVALID_PAGE, e.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
