@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMC 미션 관리 시스템 - 테스트 페이지</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .result pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+        
+        .success {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+        
+        .error {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        
+        .info-box ul {
+            margin-left: 20px;
+        }
+        
+        .info-box li {
+            margin-bottom: 8px;
+        }
+        
+        .link-box {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .link {
+            display: inline-block;
+            padding: 15px 30px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 UMC 미션 관리 시스템</h1>
+            <p>가게 리뷰 & 미션 도전 API 테스트 페이지</p>
+        </div>
+        
+        <div class="content">
+            <div class="info-box">
+                <h3>📌 시스템 정보</h3>
+                <ul>
+                    <li><strong>하드코딩된 회원 ID:</strong> 1 (홍길동)</li>
+                    <li><strong>테스트 가게:</strong> ID 1 (맛있는 식당), ID 2 (행복한 카페)</li>
+                    <li><strong>테스트 미션:</strong> ID 1~3 (각 가게의 미션)</li>
+                    <li><strong>데이터베이스:</strong> H2 메모리 DB (설치 불필요!)</li>
+                    <li><strong>H2 Console:</strong> <a href="/h2-console" target="_blank">/h2-console</a> (JDBC URL: jdbc:h2:mem:testdb, User: sa, Password: 공백)</li>
+                    <li><strong>서버 포트:</strong> 9098</li>
+                    <li><strong>Swagger UI:</strong> <a href="/swagger-ui.html" target="_blank">/swagger-ui.html</a></li>
+                </ul>
+            </div>
+            
+            <!-- 리뷰 작성 섹션 -->
+            <div class="section">
+                <h2>📝 1. 가게에 리뷰 작성하기</h2>
+                <div class="form-group">
+                    <label>가게 ID</label>
+                    <select id="reviewStoreId">
+                        <option value="1">1 - 맛있는 식당</option>
+                        <option value="2">2 - 행복한 카페</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>평점 (0.0 ~ 5.0)</label>
+                    <input type="number" id="reviewRating" step="0.1" min="0" max="5" value="4.5">
+                </div>
+                <div class="form-group">
+                    <label>리뷰 내용 (최소 5자)</label>
+                    <textarea id="reviewContent" placeholder="리뷰를 작성해주세요...">정말 맛있었어요! 다음에 또 올게요~</textarea>
+                </div>
+                <button class="btn" onclick="createReview()">리뷰 작성하기</button>
+                <div id="reviewResult" class="result" style="display: none;"></div>
+            </div>
+            
+            <!-- 미션 도전 섹션 -->
+            <div class="section">
+                <h2>🎮 2. 미션 도전하기</h2>
+                <div class="form-group">
+                    <label>미션 선택</label>
+                    <select id="missionId">
+                        <option value="1">1 - 3회 방문하기 (맛있는 식당)</option>
+                        <option value="2">2 - 5만원 이상 주문하기 (맛있는 식당)</option>
+                        <option value="3">3 - 커피 10잔 구매하기 (행복한 카페)</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="challengeMission()">미션 도전하기</button>
+                <div id="missionResult" class="result" style="display: none;"></div>
+            </div>
+            
+            <!-- 조회 기능 -->
+            <div class="section">
+                <h2>🔍 3. 조회 기능</h2>
+                <div class="btn-group">
+                    <button class="btn" onclick="getMyReviews()">내 리뷰 목록</button>
+                    <button class="btn" onclick="getStoreReviews(1)">가게1 리뷰 목록</button>
+                    <button class="btn" onclick="getStoreReviews(2)">가게2 리뷰 목록</button>
+                    <button class="btn" onclick="getChallengingMissions()">도전 중인 미션</button>
+                    <button class="btn" onclick="getCompletedMissions()">완료한 미션</button>
+                </div>
+                <div id="queryResult" class="result" style="display: none;"></div>
+            </div>
+            
+            <!-- 링크 -->
+            <div class="link-box">
+                <a href="/swagger-ui.html" target="_blank" class="link">📖 Swagger UI</a>
+                <a href="/h2-console" target="_blank" class="link">🗄️ H2 Console</a>
+                <a href="/api-docs" target="_blank" class="link">📄 API Docs (JSON)</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = '/api';
+        
+        function showResult(elementId, data, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = 'result ' + (isSuccess ? 'success' : 'error');
+            element.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        }
+        
+        async function createReview() {
+            const storeId = document.getElementById('reviewStoreId').value;
+            const rating = parseFloat(document.getElementById('reviewRating').value);
+            const content = document.getElementById('reviewContent').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/reviews`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ storeId, rating, content })
+                });
+                const data = await response.json();
+                showResult('reviewResult', data, response.ok);
+            } catch (error) {
+                showResult('reviewResult', { error: error.message }, false);
+            }
+        }
+        
+        async function challengeMission() {
+            const missionId = document.getElementById('missionId').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/member-missions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ missionId })
+                });
+                const data = await response.json();
+                showResult('missionResult', data, response.ok);
+            } catch (error) {
+                showResult('missionResult', { error: error.message }, false);
+            }
+        }
+        
+        async function getMyReviews() {
+            try {
+                const response = await fetch(`${API_BASE}/reviews/my`);
+                const data = await response.json();
+                showResult('queryResult', data, response.ok);
+            } catch (error) {
+                showResult('queryResult', { error: error.message }, false);
+            }
+        }
+        
+        async function getStoreReviews(storeId) {
+            try {
+                const response = await fetch(`${API_BASE}/reviews/stores/${storeId}`);
+                const data = await response.json();
+                showResult('queryResult', data, response.ok);
+            } catch (error) {
+                showResult('queryResult', { error: error.message }, false);
+            }
+        }
+        
+        async function getChallengingMissions() {
+            try {
+                const response = await fetch(`${API_BASE}/member-missions/challenging`);
+                const data = await response.json();
+                showResult('queryResult', data, response.ok);
+            } catch (error) {
+                showResult('queryResult', { error: error.message }, false);
+            }
+        }
+        
+        async function getCompletedMissions() {
+            try {
+                const response = await fetch(`${API_BASE}/member-missions/completed`);
+                const data = await response.json();
+                showResult('queryResult', data, response.ok);
+            } catch (error) {
+                showResult('queryResult', { error: error.message }, false);
+            }
+        }
+    </script>
+</body>
+</html>
