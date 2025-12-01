@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class Mission extends BaseEntity {
 
     @Id
+    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -25,9 +26,11 @@ public class Mission extends BaseEntity {
     @Column(name="point", nullable=false)
     private Integer point;
 
+    @Getter
     @Column(name="deadline", nullable=false)
     private LocalDateTime deadline;
 
+    @Getter
     @ManyToOne(fetch=FetchType.LAZY, optional=false)
     @JoinColumn(name="store_id", nullable=false)
     private Store store;
