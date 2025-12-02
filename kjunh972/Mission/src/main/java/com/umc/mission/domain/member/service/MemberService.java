@@ -3,6 +3,7 @@ package com.umc.mission.domain.member.service;
 import com.umc.mission.domain.member.dto.MemberDto;
 import com.umc.mission.domain.member.entity.Member;
 import com.umc.mission.domain.member.enums.MemberStatus;
+import com.umc.mission.domain.member.enums.SocialType;
 import com.umc.mission.domain.member.exception.MemberAlreadyInactiveException;
 import com.umc.mission.domain.member.exception.MemberNotFoundException;
 import com.umc.mission.domain.member.repository.MemberRepository;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -100,5 +103,29 @@ public class MemberService {
                 .ongoing(ongoingMissions)
                 .completed(completedMissions)
                 .build();
+    }
+
+    // OAuth2 로그인 회원 생성 또는 업데이트
+    @Transactional
+    public Member createOrUpdateMember(SocialType socialAttr, String socialId, String photo, String name) {
+        Optional<Member> existingMember = memberRepository.findBySocialId(socialId);
+
+        if (existingMember.isPresent()) {
+            Member member = existingMember.get();
+            if (photo != null) {
+                member.updatePhoto(photo);
+            }
+            return member;
+        }
+
+        MemberDto.MemberCreateDTO memberCreateDTO = MemberDto.MemberCreateDTO.builder()
+                .socialAttr(socialAttr)
+                .socialId(socialId)
+                .photo(photo)
+                .name(name)
+                .build();
+
+        Member newMember = new Member(memberCreateDTO);
+        return memberRepository.save(newMember);
     }
 }

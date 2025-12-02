@@ -5,6 +5,7 @@ import com.umc.mission.domain.auth.session.dto.LoginRequest;
 import com.umc.mission.domain.auth.session.dto.SignupRequest;
 import com.umc.mission.domain.member.entity.Member;
 import com.umc.mission.domain.member.enums.MemberStatus;
+import com.umc.mission.domain.member.enums.SocialType;
 import com.umc.mission.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +34,7 @@ public class SessionAuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
-                .socialType("LOCAL")
+                .socialType(SocialType.GENERAL)
                 .status(MemberStatus.ACTIVE)
                 .build();
 

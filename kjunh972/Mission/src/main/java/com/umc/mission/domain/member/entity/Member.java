@@ -1,6 +1,8 @@
 package com.umc.mission.domain.member.entity;
 
+import com.umc.mission.domain.member.dto.MemberDto;
 import com.umc.mission.domain.member.enums.MemberStatus;
+import com.umc.mission.domain.member.enums.SocialType;
 import com.umc.mission.domain.mission.entity.MemberMission;
 import com.umc.mission.domain.point.entity.PointHistory;
 import com.umc.mission.domain.region.entity.RegionMissionStats;
@@ -55,9 +57,13 @@ public class Member extends BaseEntity {
     @Column(name = "profile_image", length = 255)
     private String profileImage;
 
-    @NotBlank
+    @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "social_type", nullable = false, length = 20)
-    private String socialType;
+    private SocialType socialType;
+
+    @Column(name = "social_id", length = 100)
+    private String socialId;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -83,4 +89,19 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<RegionMissionStats> regionMissionStats = new HashSet<>();
+
+    public Member(MemberDto.MemberCreateDTO dto) {
+        this.socialType = dto.getSocialAttr();
+        this.socialId = dto.getSocialId();
+        this.profileImage = dto.getPhoto();
+        this.name = dto.getName();
+        this.nickname = dto.getName();
+        this.email = dto.getSocialAttr().name().toLowerCase() + "_" + dto.getSocialId() + "@oauth.temp";
+        this.password = "";
+        this.status = MemberStatus.ACTIVE;
+    }
+
+    public void updatePhoto(String photo) {
+        this.profileImage = photo;
+    }
 }

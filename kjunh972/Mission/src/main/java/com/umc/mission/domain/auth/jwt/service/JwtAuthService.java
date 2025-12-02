@@ -5,6 +5,7 @@ import com.umc.mission.domain.auth.jwt.dto.JwtLoginDto;
 import com.umc.mission.domain.auth.jwt.dto.JwtSignupRequest;
 import com.umc.mission.domain.member.entity.Member;
 import com.umc.mission.domain.member.enums.MemberStatus;
+import com.umc.mission.domain.member.enums.SocialType;
 import com.umc.mission.domain.member.repository.MemberRepository;
 import com.umc.mission.global.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class JwtAuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
-                .socialType("LOCAL")
+                .socialType(SocialType.GENERAL)
                 .status(MemberStatus.ACTIVE)
                 .build();
 
