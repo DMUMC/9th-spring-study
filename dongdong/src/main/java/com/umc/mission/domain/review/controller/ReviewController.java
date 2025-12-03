@@ -56,7 +56,7 @@ public class ReviewController {
     public ApiResponse<Page<ReviewDto.Response>> getReviewsStore(
             @PathVariable Long storeId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+              @RequestParam(defaultValue = "10") int size) {
         return ApiResponse.ok(reviewService.getReviewsStore(storeId, page, size));
     }
 

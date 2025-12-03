@@ -1,6 +1,7 @@
 package com.umc.mission.domain.member.entity;
 
 import com.umc.mission.domain.member.enums.MemberStatus;
+import com.umc.mission.domain.member.enums.Role;
 import com.umc.mission.domain.mission.entity.MemberMission;
 import com.umc.mission.domain.point.entity.PointHistory;
 import com.umc.mission.domain.region.entity.RegionMissionStats;
@@ -28,6 +29,13 @@ public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // Member.java 내부에 추가
+    @Column(nullable = true) // 소셜 로그인의 경우 비번이 없을 수 있으므로 true
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role; // Role Enum 생성 필요 (USER, ADMIN)
 
     @NotBlank
     @Email
