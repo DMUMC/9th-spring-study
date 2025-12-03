@@ -1,22 +1,17 @@
 package com.example.dobee.domain.mission.entity;
 
-import com.example.dobee.domain.mission.enums.MissionStatus;
 import com.example.dobee.domain.store.entity.Store;
 import com.example.dobee.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
 @Entity
-@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 @Table(name = "mission")
 public class Mission extends BaseEntity {
 
@@ -24,36 +19,16 @@ public class Mission extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(name = "deadline")
+    private LocalDate deadline;
+
+    @Column(name = "conditional")
+    private String conditional;
+
+    @Column(name = "point")
+    private int point;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
-
-    @NotBlank
-    @Size(max = 100)
-    @Column(nullable = false, length = 100)
-    private String title;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @NotNull
-    @Column(name = "reward_point", nullable = false)
-    @Builder.Default
-    private Integer rewardPoint = 100;
-
-    @NotNull
-    @Column(name = "deadline_days", nullable = false)
-    @Builder.Default
-    private Integer deadlineDays = 30;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    @Builder.Default
-    private MissionStatus status = MissionStatus.ACTIVE;
-
-    @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<MemberMission> memberMissions = new ArrayList<>();
 }

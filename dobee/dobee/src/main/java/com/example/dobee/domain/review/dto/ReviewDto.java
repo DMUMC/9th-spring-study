@@ -1,87 +1,74 @@
 package com.example.dobee.domain.review.dto;
 
 import com.example.dobee.domain.review.entity.Review;
-import lombok.AllArgsConstructor;
+import com.example.dobee.global.annotation.ExistMember;
+import com.example.dobee.global.annotation.ExistStore;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
+import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class ReviewDto {
 
     @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @Setter
     public static class Request {
-        private Long memberId;
-        private Long storeId;
-        private BigDecimal rating;
-        private String content;
-    }
-
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
-        private Long id;
-        private Long memberId;
-        private String memberName;
-        private Long storeId;
+        private Long userId;
         private String storeName;
-        private BigDecimal rating;
-        private String content;
-        private String status;
-        private LocalDateTime createdAt;
-
-        public static Response from(Review review) {
-            return Response.builder()
-                    .id(review.getId())
-                    .memberId(review.getMember().getId())
-                    .memberName(review.getMember().getName())
-                    .storeId(review.getStore().getId())
-                    .storeName(review.getStore().getName())
-                    .rating(review.getRating())
-                    .content(review.getContent())
-                    .status(review.getStatus().name())
-                    .createdAt(review.getCreatedAt())
-                    .build();
-        }
+        private Integer rating;
     }
 
     @Getter
     @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class PageResponse {
-        private List<Response> reviews;
-        private long totalElements;
-        private int numberOfElements;
-        private int totalPages;
-        private int currentPage;
-        private int pageSize;
-        private boolean isFirst;
-        private boolean isLast;
+    public static class ReviewPreViewResDto {
 
-        public static PageResponse from(Page<Review> page) {
-            return PageResponse.builder()
-                    .reviews(page.getContent().stream()
-                            .map(Response::from)
-                            .toList())
-                    .totalElements(page.getTotalElements())
-                    .numberOfElements(page.getNumberOfElements())
-                    .totalPages(page.getTotalPages())
-                    .currentPage(page.getNumber())
-                    .pageSize(page.getSize())
-                    .isFirst(page.isFirst())
-                    .isLast(page.isLast())
+        private Long reviewId;
+        private String content;
+        private Float star;
+        private String storeName;
+        private String memberName;
+
+        public static ReviewPreViewResDto from(Review review) {
+            return ReviewPreViewResDto.builder()
+                    .reviewId(review.getId())
+                    .content(review.getContent())
+                    .star(review.getStar())
+                    .storeName(review.getStore().getName())
+                    .memberName(review.getMember().getNickname())
                     .build();
         }
     }
 
+    public record AddReviewReqDto(
+            @NotNull @ExistMember
+            Long memberId,
+            @NotNull @ExistStore
+            Long storeId,
+            @NotBlank
+            String content,
+            @NotNull
+            Float star
+    ) {}
+
+    public record AddReviewResDto(
+            Long reviewId,
+            String storeName,
+            String memberNickname,
+            LocalDateTime createdAt
+    ) {}
+
+    @Builder
+    @Getter
+    public static class ReviewPreViewListResDto {
+        private List<ReviewPreViewResDto> reviewList;
+        private Integer listSize;
+        private Integer totalPage;
+        private Long totalElements;
+        private Boolean isFirst;
+        private Boolean isLast;
+    }
 }

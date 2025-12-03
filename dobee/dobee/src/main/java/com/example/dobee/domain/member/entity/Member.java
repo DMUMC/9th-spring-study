@@ -1,83 +1,86 @@
 package com.example.dobee.domain.member.entity;
 
-import com.example.dobee.domain.member.enums.MemberStatus;
-import com.example.dobee.domain.mission.entity.MemberMission;
-import com.example.dobee.domain.point.entity.PointHistory;
-import com.example.dobee.domain.region.entity.RegionMissionStats;
-import com.example.dobee.domain.review.entity.Review;
+import com.example.dobee.domain.member.entity.mapping.MemberFood;
+import com.example.dobee.domain.member.entity.mapping.MemberTerm;
+import com.example.dobee.domain.member.enums.Gender;
+import com.example.dobee.domain.store.enums.Address;
+import com.example.dobee.domain.member.enums.SocialType;
+import com.example.dobee.global.auth.enums.Role;
 import com.example.dobee.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 @Table(name = "member")
+@EntityListeners(AuditingEntityListener.class)
 public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Email
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank
-    @Size(max = 20)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Column(name = "name", nullable = false) // NOT NULL
     private String name;
 
-    @Size(max = 20)
-    @Column(length = 20)
+    @Column(nullable = false, unique = true)
     private String nickname;
 
-    @Column(name = "phone_num", length = 20)
-    private String phoneNum;
-
-    @Column(length = 10)
-    private String gender;
-
-    @Column(name = "profile_image", length = 255)
-    private String profileImage;
-
-    @NotBlank
-    @Column(name = "social_type", nullable = false, length = 20)
-    private String socialType;
-
-    @NotNull
+    @Column(name = "gender", nullable = false) // NOT NULL
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 15)
     @Builder.Default
-    private MemberStatus status = MemberStatus.ACTIVE;
+    private Gender gender = Gender.NONE; // Default value: NONE
 
-    @Column(name = "inactive_date", columnDefinition = "DATETIME(6)")
-    private LocalDateTime inactiveDate;
+    @Column(name = "birth", nullable = false) // NOT NULL
+    private LocalDate birth;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "address", nullable = false) // NOT NULL
+    @Enumerated(EnumType.STRING)
+    private Address address;
+
+    @Column(name = "detail_address", nullable = false) // NOT NULL
+    private String detailAddress;
+
+    @Column(name = "social_uid") // NULL 허용
+    private String socialUid;
+
+    @Column(name = "social_type") // NULL 허용
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
+    @Column(name = "point", nullable = false) // NOT NULL
     @Builder.Default
-    private Set<MemberMission> memberMissions = new HashSet<>();
+    private int point = 0; // Default value: 0 (primitive type ensures not null implicitly, but explicit init is safer with Builder)
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private Set<Review> reviews = new HashSet<>();
+    @Column(name = "phone_number") // NULL 허용 (nullable = true가 기본값)
+    private String phoneNumber;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    @Builder.Default
-    private Set<PointHistory> pointHistories = new HashSet<>();
+    @Column(name = "deleted_at") // NULL 허용, 명세서에 추가된 필드
+    private LocalDateTime deletedAt;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private Set<RegionMissionStats> regionMissionStats = new HashSet<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<MemberFood> memberFoodList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<MemberTerm> memberTermList = new ArrayList<>();
+
+
 }

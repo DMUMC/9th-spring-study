@@ -1,57 +1,38 @@
 package com.example.dobee.domain.member.controller;
 
 import com.example.dobee.domain.member.dto.MemberDto;
-import com.example.dobee.domain.member.entity.Member;
-import com.example.dobee.domain.member.service.MemberService;
-import com.example.dobee.domain.mission.dto.MemberMissionDto;
-import com.example.dobee.global.code.SuccessCode;
-import com.example.dobee.global.response.ApiResponse;
+import com.example.dobee.domain.member.exception.code.MemberSuccessCode;
+import com.example.dobee.domain.member.service.command.MemberCommandService;
+import com.example.dobee.domain.member.service.query.MemberQueryService;
+import com.example.dobee.global.apiPayload.ApiResponse;
+import com.example.dobee.global.auth.enums.Role;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/members")
+@RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberCommandService memberCommandService;
+    private final MemberQueryService memberQueryService;
 
-    @GetMapping("/{memberId}")
-    public ApiResponse<Member> getMemberInfo(@PathVariable Long memberId) {
-        return ApiResponse.onSuccess(SuccessCode.OK, memberService.getMemberInfo(memberId));
+
+    @PostMapping("/sign-up")
+    public ApiResponse<MemberDto.MemberJoinResDto> signUp(
+            @RequestBody @Valid MemberDto.MemberJoinReqDto dto
+    ) {
+        return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_JOIN_SUCCESS, memberCommandService.signup(dto));
     }
 
-    @GetMapping("/{memberId}/missions/ongoing")
-    public ApiResponse<Page<MemberMissionDto.Response>> getOngoingMissions(
-            @PathVariable Long memberId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.onSuccess(SuccessCode.OK, memberService.getMissionsOngoing(memberId, page, size));
-    }
-
-    @GetMapping("/{memberId}/missions/completed")
-    public ApiResponse<Page<MemberMissionDto.Response>> getCompletedMissions(
-            @PathVariable Long memberId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.onSuccess(SuccessCode.OK, memberService.getMissionsCompleted(memberId, page, size));
-    }
-
-    @GetMapping("/{memberId}/missions/stats")
-    public ApiResponse<MemberDto.MissionStats> getMissionStats(@PathVariable Long memberId) {
-        return ApiResponse.onSuccess(SuccessCode.OK, memberService.getMissionStats(memberId));
-    }
-
-    @DeleteMapping("/{memberId}/withdraw")
-    public ApiResponse<Void> withdrawMember(@PathVariable Long memberId) {
-        memberService.withdrawMember(memberId);
-        return ApiResponse.onSuccess(SuccessCode.OK);
-    }
-
-    @DeleteMapping("/{memberId}/permanent")
-    public ApiResponse<Void> deleteMemberPermanently(@PathVariable Long memberId) {
-        memberService.deleteMemberPermanently(memberId);
-        return ApiResponse.onSuccess(SuccessCode.OK);
+    @PostMapping("/login")
+    public ApiResponse<MemberDto.LoginResDto> login(
+            @RequestBody @Valid MemberDto.LoginReqDto dto
+    ){
+        return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_LOGIN_SUCCESS, memberQueryService.login(dto));
     }
 }

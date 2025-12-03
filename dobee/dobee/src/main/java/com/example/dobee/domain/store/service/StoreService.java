@@ -1,13 +1,12 @@
 package com.example.dobee.domain.store.service;
 
-import com.example.dobee.domain.region.entity.Region;
-import com.example.dobee.domain.region.repository.RegionRepository;
+import com.example.dobee.domain.store.converter.StoreConverter;
 import com.example.dobee.domain.store.dto.StoreDto;
+import com.example.dobee.domain.store.entity.Location;
 import com.example.dobee.domain.store.entity.Store;
-import com.example.dobee.domain.store.entity.StoreCategory;
-import com.example.dobee.domain.store.exception.CategoryNotFoundException;
-import com.example.dobee.domain.store.exception.RegionNotFoundException;
-import com.example.dobee.domain.store.repository.StoreCategoryRepository;
+import com.example.dobee.domain.store.exception.StoreException;
+import com.example.dobee.domain.store.exception.code.StoreErrorCode;
+import com.example.dobee.domain.store.repository.LocationRepository;
 import com.example.dobee.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,24 +14,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class StoreService {
 
     private final StoreRepository storeRepository;
-    private final RegionRepository regionRepository;
-    private final StoreCategoryRepository storeCategoryRepository;
+    private final LocationRepository locationRepository;
 
-    @Transactional
-    public StoreDto.StoreResponse addStore(StoreDto.AddStoreRequest addStoreRequest) {
-        Region region = regionRepository.findById(addStoreRequest.getRegionId())
-                .orElseThrow(RegionNotFoundException::new);
+    public Store addStore(StoreDto.AddStoreReqDto request) {
+        Location location = locationRepository.findById(request.locationId())
+                .orElseThrow(() -> new StoreException(StoreErrorCode.LOCATION_NOT_FOUND));
 
-        StoreCategory category = storeCategoryRepository.findById(addStoreRequest.getCategoryId())
-                .orElseThrow(CategoryNotFoundException::new);
+        Store newStore = StoreConverter.toStore(request, location);
 
-        Store newStore = addStoreRequest.toEntity(region, category);
-        Store savedStore = storeRepository.save(newStore);
-
-        return new StoreDto.StoreResponse(savedStore);
+        return storeRepository.save(newStore);
     }
 }
