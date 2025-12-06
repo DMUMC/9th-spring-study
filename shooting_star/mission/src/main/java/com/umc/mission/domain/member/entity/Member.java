@@ -6,6 +6,7 @@ import com.umc.mission.domain.mission.entity.MemberMission;
 import com.umc.mission.domain.point.entity.PointHistory;
 import com.umc.mission.domain.region.entity.RegionMissionStats;
 import com.umc.mission.domain.review.entity.Review;
+import com.umc.mission.global.auth.enums.Role;
 import com.umc.mission.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -36,6 +37,12 @@ public class Member extends BaseEntity {
     @Email
     @Column(nullable = false, unique = true, length = 100)
     private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @NotBlank
     @Size(max = 20)

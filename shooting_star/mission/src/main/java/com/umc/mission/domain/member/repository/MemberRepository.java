@@ -22,4 +22,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying
     @Query("DELETE FROM RegionMissionStats rms WHERE rms.member.id = :memberId")
     void deleteAllRegionMissionStatsByMemberId(@Param("memberId") Long memberId);
+
+    Optional<Member> findByEmail(String email);
 }
