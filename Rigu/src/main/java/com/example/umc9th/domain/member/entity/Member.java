@@ -6,14 +6,25 @@ import com.example.umc9th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "member")
+@Table(
+        name = "member",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_member_email",
+                        columnNames = "email"
+                )
+        }
+)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
     @Id
-    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -36,6 +47,10 @@ public class Member extends BaseEntity {
     @Column(name="email", nullable=false, length=100)
     private String email;
 
+    // 🔐 로그인용 패스워드(BCrypt 인코딩 값)
+    @Column(name="password", nullable=false, length=255)
+    private String password;
+
     @Column(name="nickname", nullable=false, length=45)
     private String nickname;
 
@@ -57,22 +72,4 @@ public class Member extends BaseEntity {
 
     @Column(name="deleted_at")
     private LocalDateTime deletedAt;
-
-    protected Member() { }
-
-    public Member(String name, Gender gender, LocalDate birth, String address, String detailAddress,
-                  String email, String nickname, String phoneNumber, String socialUid, SocialType socialType) {
-        this.name = name;
-        this.gender = gender;
-        this.birth = birth;
-        this.address = address;
-        this.detailAddress = detailAddress;
-        this.email = email;
-        this.nickname = nickname;
-        this.phoneNumber = phoneNumber;
-        this.socialUid = socialUid;
-        this.socialType = socialType;
-        this.point = 0;
-    }
 }
-
