@@ -1,0 +1,5 @@
+INSERT INTO food (name) VALUES ('KOREAN');
+INSERT INTO food (name) VALUES ('JAPANESE');
+INSERT INTO food (name) VALUES ('CHINESE');
+INSERT INTO food (name) VALUES ('WESTERN');
+INSERT INTO food (name) VALUES ('NONE');
